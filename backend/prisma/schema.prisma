@@ -3,6 +3,14 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+}
+
+model User {
+  id           String @id @default(cuid())
+  spotifyId    String @unique
+  displayName  String
+  email        String @unique
+  accessToken  String
+  refreshToken String
 }

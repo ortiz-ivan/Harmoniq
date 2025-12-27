@@ -1,18 +1,37 @@
-import fastify from "fastify";
-import cors from "@fastify/cors"
+import Fastify from "fastify";
+import cors from "@fastify/cors";
+import fastifyEnv from "@fastify/env";
+import { authRoutes } from "./modules/auth/infrastructure/controllers/auth.controller";
 
 export const buildApp = () => {
-    const app = fastify({
-        logger: true,
-    });
+  const app = Fastify({ logger: true });
 
-    app.register(cors, {
-        origin: true,
-    });
+  // CORS
+  app.register(cors, { origin: true });
 
-    app.get("/health", async () => {
-        return { status: "ok"};
-    });
+  // ENV CONFIG (antes de las rutas)
+  app.register(fastifyEnv, {
+    dotenv: true,
+    schema: {
+      type: "object",
+      required: [
+        "SPOTIFY_CLIENT_ID",
+        "SPOTIFY_CLIENT_SECRET",
+        "SPOTIFY_REDIRECT_URI",
+      ],
+      properties: {
+        SPOTIFY_CLIENT_ID: { type: "string" },
+        SPOTIFY_CLIENT_SECRET: { type: "string" },
+        SPOTIFY_REDIRECT_URI: { type: "string" },
+      },
+    },
+  });
 
-    return app;
-}
+  // Healthcheck
+  app.get("/health", async () => ({ status: "ok" }));
+
+  // Routes
+  app.register(authRoutes);
+
+  return app;
+};
