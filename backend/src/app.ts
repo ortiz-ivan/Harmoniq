@@ -2,6 +2,7 @@ import Fastify from "fastify";
 import cors from "@fastify/cors";
 import fastifyEnv from "@fastify/env";
 import { authRoutes } from "./modules/auth/infrastructure/controllers/auth.controller";
+import { matchRoutes } from "./modules/matching"; // importando desde index.ts
 
 export const buildApp = () => {
   const app = Fastify({ logger: true });
@@ -32,6 +33,7 @@ export const buildApp = () => {
 
   // Routes
   app.register(authRoutes);
+  app.register(matchRoutes, { prefix: "/matching" }); // registrar con prefijo
 
   return app;
 };
