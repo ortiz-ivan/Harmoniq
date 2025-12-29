@@ -1,6 +1,14 @@
 import { Match } from "../entities/match.entity";
 
 export interface IMatchRepository {
-    save(match: Match): Promise<void>;
-    findMatchesForUser(userId: string): Promise<Match[]>;
+    create(
+        userAId: string,
+        userBId: string,
+        score: number,
+    ): Promise<Match>;
+
+    findBetweenUsers(
+        userAId: string,
+        userBId: string
+    ): Promise<Match | null>;
 }

@@ -13,4 +13,20 @@ model User {
   email        String @unique
   accessToken  String
   refreshToken String
+
+  matchesAsA Match[] @relation("UserAMatches")
+  matchesAsB Match[] @relation("UserBMatches")
+}
+
+model Match {
+  id        String   @id @default(cuid())
+  userAId   String
+  userBId   String
+  score     Int
+  createdAt DateTime @default(now())
+
+  userA User @relation("UserAMatches", fields: [userAId], references: [id])
+  userB User @relation("UserBMatches", fields: [userBId], references: [id])
+
+  @@unique([userAId, userBId])
 }
