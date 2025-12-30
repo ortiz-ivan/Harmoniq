@@ -1,8 +1,8 @@
-import Fastify from "fastify";
+import { buildApp } from "fastify";
 import cors from "@fastify/cors";
 import fastifyEnv from "@fastify/env";
-import { authRoutes } from "./modules/auth/infrastructure/controllers/auth.controller";
-import { matchRoutes } from "./modules/matching"; // importando desde index.ts
+import { authController } from "./modules/auth";
+import { matchRoutes } from "./modules/matching"; 
 
 export const buildApp = () => {
   const app = Fastify({ logger: true });
@@ -10,7 +10,7 @@ export const buildApp = () => {
   // CORS
   app.register(cors, { origin: true });
 
-  // ENV CONFIG (antes de las rutas)
+  // ENV CONFIG
   app.register(fastifyEnv, {
     dotenv: true,
     schema: {
@@ -32,8 +32,8 @@ export const buildApp = () => {
   app.get("/health", async () => ({ status: "ok" }));
 
   // Routes
-  app.register(authRoutes);
-  app.register(matchRoutes, { prefix: "/matching" }); // registrar con prefijo
+  app.register(authController); 
+  app.register(matchRoutes, { prefix: "/matching" });
 
   return app;
 };
