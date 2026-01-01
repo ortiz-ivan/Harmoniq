@@ -22,6 +22,7 @@ export function createAuthController(
     redirect_uri: process.env.SPOTIFY_REDIRECT_URI!,
     scope: "user-read-email",
     state,
+    show_dialog: "true"
   });
 
   return reply.redirect(
